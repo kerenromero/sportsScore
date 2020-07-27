@@ -4,7 +4,7 @@
     "description": "Web application",
     "main": "index.js",
     "scripts": {
-        "devStart": "nodemon server.js"
+        "sportsScore": "nodemon server.js"
     },
     "repository": {
         "type": "git",

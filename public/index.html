@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
     <script defer src="script.js"></script>
+    <script defer src="../server.js"></script>
     <title>Sports Score</title>
 </head>
 
@@ -19,8 +20,9 @@
             </div>
             <div class="passwordContainer">
                 <h3 class="userAndPassText">Password</h3>
-                <input type="text" id="loginPassword" required>
+                <input type="password" id="loginPassword" required>
             </div>
+            <div id="loginError"></div>
             <div class="RegisterContainer">
                 <button id="loginBtn">Login</button>
             </div>
@@ -38,12 +40,14 @@
             </div>
             <div class="passwordContainer">
                 <h3 class="userAndPassText">Password</h3>
-                <input type="text" id="registerPassword" required>
+                <input type="password" id="registerPassword" required>
             </div>
             <div class="passwordContainer">
                 <h3 class="userAndPassText">Confirm Password</h3>
-                <input type="text" id="confirmPassword" required>
+                <input type="password" id="confirmPassword" required>
+
             </div>
+            <div id="Error"></div>
             <div class="RegisterContainer">
                 <button id="registerBtn">Register</button>
             </div>

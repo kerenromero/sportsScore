@@ -11,6 +11,8 @@ var registerUsername = document.getElementById('registerUsername');
 var registerPassword = document.getElementById('registerPassword');
 var confirmPassword = document.getElementById('confirmPassword');
 var registerBtn = document.getElementById('registerBtn');
+var error = document.getElementById('Error');
+var loginError = document.getElementById('loginError');
 
 registerLink.addEventListener('click', () => {
     loginContainer.style.display = "none";
@@ -22,13 +24,29 @@ loginLink.addEventListener('click', () => {
     loginContainer.style.display = "block";
 })
 
+loginBtn.addEventListener('click', () => {
+
+    fetch('/login', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/josn'
+        },
+        body: JSON.stringify({
+            username: loginUsername.value,
+            password: loginPassword.value
+        })
+    }).then(res => res.json()).then(data => {
+        loginError.innerHTML = data;
+    })
+
+})
+
 registerBtn.addEventListener('click', () => {
-    //check if username is available 
-    // check if passwords match
+
     if (registerPassword.value === confirmPassword.value) {
-        // pass to server
-        console.log('here');
-        fetch('/account', {
+        error.innerHTML = '';
+        fetch('/registerAccount', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -39,12 +57,10 @@ registerBtn.addEventListener('click', () => {
                 password: confirmPassword.value
             })
 
-        })
-        console.log('after fetch');
-
-
-
+        }).then(res => res.json()).then(data => {
+            error.innerHTML = 'Username already taken.';
+        });
     } else {
-
+        error.innerHTML = 'Passwords did not match.';
     }
 })
