@@ -7,6 +7,8 @@ const API_KEYS = process.env.API_KEYS;
 const express = require('express');
 const mongoose = require('mongoose');
 const account = require('./models/account');
+const axios = require('axios')
+
 
 const app = express();
 
@@ -28,12 +30,43 @@ app.get('/', async(req, res) => {
     }
 });
 
+app.post('/addToTeamsList', async(req, res) => {
+    try {
+        const acc = await account.find({ "_id": req.body.username });
+        for (let i = 0; i < req.body.tempTeamsList.length; i++) {
+            acc[0].teamsList.push(req.body.tempTeamsList[i]);
+        }
+        console.log(acc);
+
+    } catch {
+        console.log('Unable to add to db');
+    }
+})
+
+app.post('/api', async(req, res) => {
+    fetch("https://api-baseball.p.rapidapi.com/teams?league=1&season=2020", {
+            "method": "GET",
+            "headers": {
+                "x-rapidapi-host": "api-baseball.p.rapidapi.com",
+                "x-rapidapi-key": process.env.API_MLB,
+            }
+        })
+        .then(response => {
+            console.log(response);
+        })
+        .catch(err => {
+            console.log(err);
+        });
+})
+
+
+
 app.post('/login', async(req, res) => {
     const acc = await account.find({ "_id": req.body.username });
-
     if (acc.length > 0) {
         if (req.body.password === acc[0].password) {
-            res.json('both user name and password matched');
+            const result = { teamsList: acc[0].teamsList, valid: true };
+            res.json(result);
         } else {
             res.json('wrong password');
         }

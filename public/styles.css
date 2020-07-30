@@ -2,6 +2,14 @@ body {
     background-color: #aaaaaa;
 }
 
+#loginContainer {
+    display: block;
+}
+
 #registerContainer {
+    display: none;
+}
+
+#addTeamsContainer {
     display: none;
 }
