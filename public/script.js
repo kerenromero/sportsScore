@@ -1,3 +1,5 @@
+// const { json } = require("express");
+
 var registerLink = document.getElementById('registerLink');
 var loginLink = document.getElementById('loginLink');
 var registerContainer = document.getElementById('registerContainer');
@@ -64,11 +66,9 @@ loginBtn.addEventListener('click', () => {
         })
     }).then(res => res.json()).then(data => {
         if (data.valid == true) {
-            // hide login
+            const accountSession = data.teamsList;
             loginContainer.style.display = "none";
-            // check if temas array is epmty
-            if (data.teamsList.length == 0) {
-                // add teams pop-up
+            if (accountSession.length == 0) {
                 addTeamsContainer.style.display = "block";
                 var NBA_Teams = ['Atlanta Hawks', 'Boston Celtics', 'Brooklyn Nets', 'Charlotte Hornets', 'Chicago Bulls', 'Cleveland Cavaliers', 'Dallas Mavericks', 'Denver Nuggets', 'Detroit Pistons', 'Golden State Warriors', 'Houston Rockets', 'Indiana Pacers', 'LA Clippers', 'LA Lakers', 'Memphis Grizzlies', 'Miami Heat', 'Milwaukee Bucks', 'Minnesota Timberwolves', 'New Orleans Hornets', 'New York Knicks', 'Oklahoma City Thunder', 'Orlando Magic', 'Philadelphia Sixers', 'Phoenix Suns', 'Portland Trail Blazers', 'Sacramento Kings', 'San Antonio Spurs', 'Toronto Raptors', 'Utah Jazz', 'Washington Wizards'];
                 printTeamsBtn(NBA_Teams);
@@ -92,10 +92,14 @@ loginBtn.addEventListener('click', () => {
 
                     })
 
+                    displayLiveScores(accountSession);
+
                 })
             } else {
-                loginError.innerHTML = data;
+                displayLiveScores(accountSession);
             }
+        } else {
+            loginError.innerHTML = data;
         }
     })
 })
@@ -139,4 +143,74 @@ function printTeamsBtn(sportList) {
         btn.appendChild(t);
         NBAteams.appendChild(btn);
     }
+}
+
+
+function displayLiveScores(teamsList) {
+
+    var today = new Date();
+    var month = today.getMonth() + 1;
+    var formattedMonth;
+
+    switch (month) {
+        case 1:
+            formattedMonth = 'JAN';
+            break;
+        case 2:
+            formattedMonth = 'FEB';
+            break;
+        case 3:
+            formattedMonth = 'MAR';
+            break;
+        case 4:
+            formattedMonth = 'APR';
+            break;
+        case 5:
+            formattedMonth = 'MAY';
+            break;
+        case 6:
+            formattedMonth = 'JUN';
+            break;
+        case 7:
+            formattedMonth = 'JUL';
+            break;
+        case 8:
+            formattedMonth = 'AUG';
+            break;
+        case 9:
+            formattedMonth = 'SEP';
+            break;
+        case 10:
+            formattedMonth = 'OCT';
+            break;
+        case 11:
+            formattedMonth = 'NOV';
+            break;
+        case 12:
+            formattedMonth = 'DEC';
+            break;
+        default:
+            formattedMonth = '';
+    }
+
+    var date = today.getFullYear() + '-' + (formattedMonth) + '-' + today.getDate();
+
+    console.log(date);
+    // api call
+    fetch('/apiNBA', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/josn'
+        },
+        body: JSON.stringify({
+            date: date
+        })
+    }).then(res => res.json()).then(data => {
+        console.log(data)
+    })
+
+
+    // ckeck if any teams in teamList are playing 
+    // if they are display it 
 }

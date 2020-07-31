@@ -1,13 +1,14 @@
-// if (process.env.NODE_ENV !== 'production') {
-//     require('dotenv').config()
-// }
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
 
 
-const API_KEYS = process.env.API_KEYS;
+const API_NBA = process.env.API_NBA;
 const express = require('express');
 const mongoose = require('mongoose');
 const account = require('./models/account');
 const axios = require('axios')
+const fetch = require('node-fetch')
 
 
 const app = express();
@@ -32,10 +33,10 @@ app.get('/', async(req, res) => {
 
 app.post('/addToTeamsList', async(req, res) => {
     try {
+        //for (let i = 0; i < req.body.tempTeamsList.length; i++) {
+        await account.update({ "_id": req.body.username }, { $push: { teamsList: { $each: req.body.tempTeamsList } } })
+            //}
         const acc = await account.find({ "_id": req.body.username });
-        for (let i = 0; i < req.body.tempTeamsList.length; i++) {
-            acc[0].teamsList.push(req.body.tempTeamsList[i]);
-        }
         console.log(acc);
 
     } catch {
@@ -43,26 +44,24 @@ app.post('/addToTeamsList', async(req, res) => {
     }
 })
 
-app.post('/api', async(req, res) => {
-    fetch("https://api-baseball.p.rapidapi.com/teams?league=1&season=2020", {
-            "method": "GET",
-            "headers": {
-                "x-rapidapi-host": "api-baseball.p.rapidapi.com",
-                "x-rapidapi-key": process.env.API_MLB,
-            }
-        })
-        .then(response => {
-            console.log(response);
-        })
-        .catch(err => {
-            console.log(err);
-        });
+app.post('/apiNBA', async(req, res) => {
+    try {
+        axios({
+
+            url: `https://api.sportsdata.io/v3/nba/scores/json/GamesByDate/${req.body.date}?key=${API_NBA}`,
+            method: 'get',
+            responseType: 'json'
+        }).then(data => res.json(data.data))
+    } catch (err) {
+        console.log(err);
+    }
 })
 
 
 
 app.post('/login', async(req, res) => {
     const acc = await account.find({ "_id": req.body.username });
+    console.log(acc);
     if (acc.length > 0) {
         if (req.body.password === acc[0].password) {
             const result = { teamsList: acc[0].teamsList, valid: true };
