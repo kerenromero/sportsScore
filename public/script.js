@@ -22,7 +22,10 @@ var teamsToBeAdded = document.getElementById('teamsToBeAdded');
 var doneAddingTeamsBtn = document.getElementById('doneAddingTeamsBtn');
 var NBAteams = document.getElementById('NBAteams');
 var NBAteamBtn = document.getElementsByClassName('NBAteamBtn');
+var gameInstanceContainer = document.getElementById('gameInstanceContainer');
+var liveScoresContainer = document.getElementById('liveScoresContainer');
 var tempTeamsList = [];
+
 
 registerLink.addEventListener('click', () => {
     loginContainer.style.display = "none";
@@ -53,7 +56,6 @@ var addToTeamsList = (clickObject) => {
 }
 
 loginBtn.addEventListener('click', () => {
-
     fetch('/login', {
         method: 'POST',
         headers: {
@@ -65,13 +67,50 @@ loginBtn.addEventListener('click', () => {
             password: loginPassword.value
         })
     }).then(res => res.json()).then(data => {
+
+        var NBA_TeamsArray = ['Atlanta Hawks', 'Boston Celtics', 'Brooklyn Nets', 'Charlotte Hornets', 'Chicago Bulls', 'Cleveland Cavaliers', 'Dallas Mavericks', 'Denver Nuggets', 'Detroit Pistons', 'Golden State Warriors', 'Houston Rockets', 'Indiana Pacers', 'LA Clippers', 'LA Lakers', 'Memphis Grizzlies', 'Miami Heat', 'Milwaukee Bucks', 'Minnesota Timberwolves', 'New Orleans Pelicans', 'New York Knicks', 'Oklahoma City Thunder', 'Orlando Magic', 'Philadelphia Sixers', 'Phoenix Suns', 'Portland Trail Blazers', 'Sacramento Kings', 'San Antonio Spurs', 'Toronto Raptors', 'Utah Jazz', 'Washington Wizards'];
+
+        var NBA_TeamsMap = new Map([
+            ['ATL', 'Atlanta Hawks'],
+            ['BOS', 'Boston Celtics'],
+            ['BKN', 'Brooklyn Nets'],
+            ['CHA', 'Charlotte Hornets'],
+            ['CHI', 'Chicago Bulls'],
+            ['CLV', 'Cleveland Cavaliers'],
+            ['DAL', 'Dallas Mavericks'],
+            ['DEN', 'Denver Nuggets'],
+            ['DET', 'Detroit Pistons'],
+            ['GSW', 'Golden State Warriors'],
+            ['HOU', 'Houston Rockets'],
+            ['IND', 'Indiana Pacers'],
+            ['LAC', 'LA Clippers'],
+            ['LAL', 'LA Lakers'],
+            ['MEM', 'Memphis Grizzlies'],
+            ['MIA', 'Miami Heat'],
+            ['MIL', 'Milwaukee Bucks'],
+            ['MIN', 'Minnesota Timberwolves'],
+            ['NOP', 'New Orleans Pelicans'],
+            ['NYK', 'New York Knicks'],
+            ['OKC', 'Oklahoma City Thunder'],
+            ['ORL', 'Orlando Magic'],
+            ['PHI', 'Philadelphia Sixers'],
+            ['PHX', 'Phoenix Suns'],
+            ['POR', 'Portland Trail Blazers'],
+            ['SAC', 'Sacramento Kings'],
+            ['SAS', 'San Antonio Spurs'],
+            ['TOR', 'Toronto Raptors'],
+            ['UTA', 'Utah Jazz'],
+            ['WAS', 'Washington Wizards']
+        ]);
+
         if (data.valid == true) {
             const accountSession = data.teamsList;
             loginContainer.style.display = "none";
             if (accountSession.length == 0) {
                 addTeamsContainer.style.display = "block";
-                var NBA_Teams = ['Atlanta Hawks', 'Boston Celtics', 'Brooklyn Nets', 'Charlotte Hornets', 'Chicago Bulls', 'Cleveland Cavaliers', 'Dallas Mavericks', 'Denver Nuggets', 'Detroit Pistons', 'Golden State Warriors', 'Houston Rockets', 'Indiana Pacers', 'LA Clippers', 'LA Lakers', 'Memphis Grizzlies', 'Miami Heat', 'Milwaukee Bucks', 'Minnesota Timberwolves', 'New Orleans Hornets', 'New York Knicks', 'Oklahoma City Thunder', 'Orlando Magic', 'Philadelphia Sixers', 'Phoenix Suns', 'Portland Trail Blazers', 'Sacramento Kings', 'San Antonio Spurs', 'Toronto Raptors', 'Utah Jazz', 'Washington Wizards'];
-                printTeamsBtn(NBA_Teams);
+
+                console.log(NBA_TeamsMap);
+                printTeamsBtn(NBA_TeamsArray);
 
                 for (let i = 0; i < NBAteamBtn.length; i++) {
                     NBAteamBtn[i].addEventListener('click', addToTeamsList, false)
@@ -89,14 +128,15 @@ loginBtn.addEventListener('click', () => {
                             tempTeamsList: tempTeamsList
                         })
                     }).then(res => res.json()).then(data => {
+                        matchAccTeamToLiveTeams(accountSession, NBA_TeamsMap);
 
                     })
 
-                    displayLiveScores(accountSession);
+
 
                 })
             } else {
-                displayLiveScores(accountSession);
+                matchAccTeamToLiveTeams(accountSession, NBA_TeamsMap);
             }
         } else {
             loginError.innerHTML = data;
@@ -146,7 +186,7 @@ function printTeamsBtn(sportList) {
 }
 
 
-function displayLiveScores(teamsList) {
+function matchAccTeamToLiveTeams(teamsList, abriviationMap) {
 
     var today = new Date();
     var month = today.getMonth() + 1;
@@ -207,10 +247,42 @@ function displayLiveScores(teamsList) {
             date: date
         })
     }).then(res => res.json()).then(data => {
-        console.log(data)
+        console.log(data);
+        liveScoresContainer.style.display = 'block';
+        for (let i = 0; i < data.length; i++) {
+            // check if what data maps to is in teams list
+            if (teamsList.includes(abriviationMap.get(data[i].HomeTeam)) || teamsList.includes(abriviationMap.get(data[i].AwayTeam))) {
+
+                displayTeams(data[i]);
+            }
+        }
     })
 
+}
 
-    // ckeck if any teams in teamList are playing 
-    // if they are display it 
+function displayTeams(gameInstance) {
+    // <div class='gameDiv'>
+    //     <h3>Lakers 45</h3>
+    //     <h3>Warroior 33</h3>
+    //     <h3>Scheduled</h3>
+    // </div>
+
+    var gameDiv = document.createElement("div");
+    gameDiv.className = "gameDiv";
+
+    var homeTeam = document.createElement("h3");
+    homeTeam.innerText = gameInstance.HomeTeam + ' ' + gameInstance.HomeTeamScore;
+    gameDiv.appendChild(homeTeam);
+
+    var awayTeam = document.createElement("h3");
+    awayTeam.innerText = gameInstance.AwayTeam + ' ' + gameInstance.AwayTeamScore;
+    gameDiv.appendChild(awayTeam);
+
+    var status = document.createElement("h3");
+    status.innerText = gameInstance.Status;
+    gameDiv.appendChild(status);
+
+    gameInstanceContainer.appendChild(gameDiv);
+
+    console.log(gameInstance);
 }

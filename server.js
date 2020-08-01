@@ -51,7 +51,25 @@ app.post('/apiNBA', async(req, res) => {
             url: `https://api.sportsdata.io/v3/nba/scores/json/GamesByDate/${req.body.date}?key=${API_NBA}`,
             method: 'get',
             responseType: 'json'
-        }).then(data => res.json(data.data))
+
+        }).then(response => {
+            var NBAgames = [];
+            for (let i = 0; i < response.data.length; i++) {
+                var game = {
+                    Status: response.data[i].Status,
+                    AwayTeam: response.data[i].AwayTeam,
+                    HomeTeam: response.data[i].HomeTeam,
+                    AwayTeamScore: response.data[i].AwayTeamScore,
+                    HomeTeamScore: response.data[i].HomeTeamScore,
+                    Quarter: response.data[i].Quarter,
+                    TimeRemainingMinutes: response.data[i].TimeRemainingMinutes,
+                    TimeRemainingSeconds: response.data[i].TimeRemainingSeconds
+                };
+                NBAgames.push(game);
+            }
+            console.log(NBAgames);
+            res.json(NBAgames);
+        })
     } catch (err) {
         console.log(err);
     }

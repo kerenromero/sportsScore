@@ -13,3 +13,16 @@ body {
 #addTeamsContainer {
     display: none;
 }
+
+#liveScoresContainer {
+    display: none;
+}
+
+#gameInstanceContainer {
+    display: flex;
+}
+
+.gameDiv {
+    background: white;
+    width: fit-content;
+}
