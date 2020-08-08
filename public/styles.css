@@ -18,11 +18,23 @@ body {
     display: none;
 }
 
-#gameInstanceContainer {
+.gameInstanceContainer {
     display: flex;
+    flex-flow: row wrap;
 }
 
 .gameDiv {
     background: white;
     width: fit-content;
+    margin: 0 2rem 2rem 0;
+    display: flex;
+    padding: 2rem;
+}
+
+.teamsDiv {
+    margin: 0 2rem 0 0;
+}
+
+.scoreDiv {
+    margin: 0 2rem 0 0;
 }

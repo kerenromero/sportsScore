@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <script defer src="script.js"></script>
+    <script defer type="module" src="script.js"></script>
     <script defer src="../server.js"></script>
     <title>Sports Score</title>
 </head>
@@ -38,16 +38,23 @@
         <div id="teamsToBeAdded">
             <h3>NBA</h3>
             <div id='NBAteams'></div>
-            <!-- <h3>MLB</h3>
-            <div id='NBAteams'></div> -->
+            <h3>MLB</h3>
+            <div id='MLBteams'></div>
+            <h3>UCL</h3>
+            <div id='UCLteams'></div>
         </div>
+
         <button id="doneAddingTeamsBtn">Done</button>
 
     </div>
 
     <div id="liveScoresContainer">
-        <h3>Live Scores</h3>
-        <div id="gameInstanceContainer"></div>
+        <h3>NBA</h3>
+        <div class="gameInstanceContainer" id="NBAgameInstanceContainer"></div>
+        <h3>MLB</h3>
+        <div class="gameInstanceContainer" id="MLBgameInstanceContainer"></div>
+        <h3>UCL</h3>
+        <div class="gameInstanceContainer" id="UCLgameInstanceContainer"></div>
     </div>
 
     <form id="registerContainer">

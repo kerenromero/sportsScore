@@ -1,5 +1,7 @@
-// const { json } = require("express");
+import teams from './teams.js';
 
+
+// const { json } = require("express");
 var registerLink = document.getElementById('registerLink');
 var loginLink = document.getElementById('loginLink');
 var registerContainer = document.getElementById('registerContainer');
@@ -15,16 +17,24 @@ var confirmPassword = document.getElementById('confirmPassword');
 var registerBtn = document.getElementById('registerBtn');
 var error = document.getElementById('Error');
 var loginError = document.getElementById('loginError');
-var addTemasContainer = document.getElementById('addTeamsContainer');
+var addTeamsContainer = document.getElementById('addTeamsContainer');
 var searchBar = document.getElementById('searchBar');
 var searchBtn = document.getElementById('searchBtn');
 var teamsToBeAdded = document.getElementById('teamsToBeAdded');
 var doneAddingTeamsBtn = document.getElementById('doneAddingTeamsBtn');
 var NBAteams = document.getElementById('NBAteams');
 var NBAteamBtn = document.getElementsByClassName('NBAteamBtn');
-var gameInstanceContainer = document.getElementById('gameInstanceContainer');
+var MLBteams = document.getElementById('MLBteams');
+var MLBteamBtn = document.getElementsByClassName('MLBteamBtn');
+var UCLteams = document.getElementById('UCLteams');
+var UCLteamBtn = document.getElementsByClassName('UCLteamBtn');
+var NBAgameInstanceContainer = document.getElementById('NBAgameInstanceContainer');
+var MLBgameInstanceContainer = document.getElementById('MLBgameInstanceContainer');
+var UCLgameInstanceContainer = document.getElementById('UCLgameInstanceContainer');
 var liveScoresContainer = document.getElementById('liveScoresContainer');
-var tempTeamsList = [];
+var tempNBAteamsList = [];
+var tempMLBteamsList = [];
+var tempUCLteamsList = [];
 
 
 registerLink.addEventListener('click', () => {
@@ -40,18 +50,44 @@ loginLink.addEventListener('click', () => {
 var addToTeamsList = (clickObject) => {
     if (clickObject.target.innerText.includes("✓")) {
         clickObject.target.innerText = clickObject.target.innerText.replace("✓", '');
-        for (let i = 0; i < tempTeamsList.length; i++) {
-            if (tempTeamsList[i] === clickObject.target.innerText) {
-                console.log('insde if');
-                tempTeamsList.splice(i, 1);
-                break;
+        if (clickObject.target.className === 'NBAteamBtn') {
+            for (let i = 0; i < tempNBAteamsList.length; i++) {
+                if (tempNBAteamsList[i] === clickObject.target.innerText) {
+                    tempNBAteamsList.splice(i, 1);
+                    break;
+                }
+            }
+        } else if (clickObject.target.className === 'MLBteamBtn') {
+            for (let i = 0; i < tempMLBteamsList.length; i++) {
+                if (tempMLBteamsList[i] === clickObject.target.innerText) {
+                    tempMLBteamsList.splice(i, 1);
+                    break;
+                }
+            }
+        } else {
+            for (let i = 0; i < tempUCLteamsList.length; i++) {
+                if (tempUCLteamsList[i] === clickObject.target.innerText) {
+                    tempUCLteamsList.splice(i, 1);
+                    break;
+                }
             }
         }
+
     } else {
-        tempTeamsList.push(clickObject.target.innerText);
+        if (clickObject.target.className === 'NBAteamBtn') {
+            tempNBAteamsList.push(clickObject.target.innerText);
+        } else if (clickObject.target.className === 'MLBteamBtn') {
+            tempMLBteamsList.push(clickObject.target.innerText);
+        } else {
+            tempUCLteamsList.push(clickObject.target.innerText);
+        }
         clickObject.target.innerText = clickObject.target.innerText + "✓";
+
+
     }
-    console.log(tempTeamsList);
+    console.log(tempNBAteamsList);
+    console.log(tempMLBteamsList);
+    console.log(tempUCLteamsList);
 
 }
 
@@ -68,53 +104,22 @@ loginBtn.addEventListener('click', () => {
         })
     }).then(res => res.json()).then(data => {
 
-        var NBA_TeamsArray = ['Atlanta Hawks', 'Boston Celtics', 'Brooklyn Nets', 'Charlotte Hornets', 'Chicago Bulls', 'Cleveland Cavaliers', 'Dallas Mavericks', 'Denver Nuggets', 'Detroit Pistons', 'Golden State Warriors', 'Houston Rockets', 'Indiana Pacers', 'LA Clippers', 'LA Lakers', 'Memphis Grizzlies', 'Miami Heat', 'Milwaukee Bucks', 'Minnesota Timberwolves', 'New Orleans Pelicans', 'New York Knicks', 'Oklahoma City Thunder', 'Orlando Magic', 'Philadelphia Sixers', 'Phoenix Suns', 'Portland Trail Blazers', 'Sacramento Kings', 'San Antonio Spurs', 'Toronto Raptors', 'Utah Jazz', 'Washington Wizards'];
-
-        var NBA_TeamsMap = new Map([
-            ['ATL', 'Atlanta Hawks'],
-            ['BOS', 'Boston Celtics'],
-            ['BKN', 'Brooklyn Nets'],
-            ['CHA', 'Charlotte Hornets'],
-            ['CHI', 'Chicago Bulls'],
-            ['CLV', 'Cleveland Cavaliers'],
-            ['DAL', 'Dallas Mavericks'],
-            ['DEN', 'Denver Nuggets'],
-            ['DET', 'Detroit Pistons'],
-            ['GSW', 'Golden State Warriors'],
-            ['HOU', 'Houston Rockets'],
-            ['IND', 'Indiana Pacers'],
-            ['LAC', 'LA Clippers'],
-            ['LAL', 'LA Lakers'],
-            ['MEM', 'Memphis Grizzlies'],
-            ['MIA', 'Miami Heat'],
-            ['MIL', 'Milwaukee Bucks'],
-            ['MIN', 'Minnesota Timberwolves'],
-            ['NOP', 'New Orleans Pelicans'],
-            ['NYK', 'New York Knicks'],
-            ['OKC', 'Oklahoma City Thunder'],
-            ['ORL', 'Orlando Magic'],
-            ['PHI', 'Philadelphia Sixers'],
-            ['PHX', 'Phoenix Suns'],
-            ['POR', 'Portland Trail Blazers'],
-            ['SAC', 'Sacramento Kings'],
-            ['SAS', 'San Antonio Spurs'],
-            ['TOR', 'Toronto Raptors'],
-            ['UTA', 'Utah Jazz'],
-            ['WAS', 'Washington Wizards']
-        ]);
-
         if (data.valid == true) {
-            const accountSession = data.teamsList;
+            const NBAaccountSession = data.NBAteamsList;
+            const MLBaccountSession = data.MLBteamsList;
+            const UCLaccountSession = data.UCLteamsList;
             loginContainer.style.display = "none";
-            if (accountSession.length == 0) {
+            if (NBAaccountSession.length == 0 && MLBaccountSession.length == 0 && UCLaccountSession.length == 0) {
                 addTeamsContainer.style.display = "block";
 
-                console.log(NBA_TeamsMap);
-                printTeamsBtn(NBA_TeamsArray);
+                printTeamsBtn(teams.NBA_TeamsArray, "NBAteamBtn", NBAteams);
+                printTeamsBtn(teams.MLB_TeamsArray, "MLBteamBtn", MLBteams);
+                printTeamsBtn(teams.UCL_TeamsArray, "UCLteamBtn", UCLteams);
 
-                for (let i = 0; i < NBAteamBtn.length; i++) {
-                    NBAteamBtn[i].addEventListener('click', addToTeamsList, false)
-                }
+
+                addEventListenerToBtns(NBAteamBtn);
+                addEventListenerToBtns(MLBteamBtn);
+                addEventListenerToBtns(UCLteamBtn);
 
                 doneAddingTeamsBtn.addEventListener('click', () => {
                     fetch('/addToTeamsList', {
@@ -125,18 +130,34 @@ loginBtn.addEventListener('click', () => {
                         },
                         body: JSON.stringify({
                             username: loginUsername.value,
-                            tempTeamsList: tempTeamsList
+                            tempNBAteamsList: tempNBAteamsList,
+                            tempMLBteamsList: tempMLBteamsList,
+                            tempUCLteamsList: tempUCLteamsList
+
+
                         })
                     }).then(res => res.json()).then(data => {
-                        matchAccTeamToLiveTeams(accountSession, NBA_TeamsMap);
+                        console.log('inside .then');
+                        const NBAaccountSessions = data.NBAteamsList;
+                        const MLBaccountSessions = data.MLBteamsList;
+                        const UCLaccountSessions = data.UCLteamsList;
+                        matchNBATeamToLiveTeams(NBAaccountSessions, teams.NBA_TeamsMap);
+                        matchMLBTeamToLiveTeams(MLBaccountSessions, teams.MLB_TeamsMap);
+                        matchUCLTeamToLiveTeams(UCLaccountSessions);
+
+                        addTeamsContainer.style.display = 'none';
+                        liveScoresContainer.style.display = 'block';
 
                     })
 
-
-
                 })
             } else {
-                matchAccTeamToLiveTeams(accountSession, NBA_TeamsMap);
+                matchNBATeamToLiveTeams(NBAaccountSession, teams.NBA_TeamsMap);
+                matchMLBTeamToLiveTeams(MLBaccountSession, teams.MLB_TeamsMap);
+                matchUCLTeamToLiveTeams(UCLaccountSession);
+                liveScoresContainer.style.display = 'block';
+
+
             }
         } else {
             loginError.innerHTML = data;
@@ -175,18 +196,26 @@ registerBtn.addEventListener('click', () => {
     }
 })
 
-function printTeamsBtn(sportList) {
+function printTeamsBtn(sportList, sportStringBtn, sportsDiv) {
+
     for (var i = 0; i < sportList.length; i++) {
         var btn = document.createElement("button");
-        btn.className += "NBAteamBtn";
+        btn.className += sportStringBtn;
         var t = document.createTextNode(sportList[i]);
         btn.appendChild(t);
-        NBAteams.appendChild(btn);
+        sportsDiv.appendChild(btn);
     }
 }
 
+function addEventListenerToBtns(btn) {
 
-function matchAccTeamToLiveTeams(teamsList, abriviationMap) {
+    for (let i = 0; i < btn.length; i++) {
+        btn[i].addEventListener('click', addToTeamsList, false)
+    }
+
+}
+
+function matchNBATeamToLiveTeams(teamsList, abriviationMap) {
 
     var today = new Date();
     var month = today.getMonth() + 1;
@@ -233,11 +262,45 @@ function matchAccTeamToLiveTeams(teamsList, abriviationMap) {
             formattedMonth = '';
     }
 
-    var date = today.getFullYear() + '-' + (formattedMonth) + '-' + today.getDate();
+    var NBAdate = today.getFullYear() + '-' + (formattedMonth) + '-' + today.getDate();
 
-    console.log(date);
     // api call
     fetch('/apiNBA', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/josn'
+        },
+        body: JSON.stringify({
+            date: NBAdate
+        })
+    }).then(res => res.json()).then(data => {
+
+        // liveScoresContainer.style.display = 'block';
+
+        console.log('inside match NBA display');
+
+        for (let i = 0; i < data.length; i++) {
+            if (teamsList.includes(abriviationMap.get(data[i].HomeTeam)) || teamsList.includes(abriviationMap.get(data[i].AwayTeam))) {
+                displayNBATeams(data[i], abriviationMap);
+            }
+        }
+    })
+
+}
+
+function matchMLBTeamToLiveTeams(teamsList, abriviationMap) {
+    var today = new Date();
+    var month = today.getMonth() + 1;
+    var date;
+
+    if (month.length == 1) {
+        date = today.getFullYear() + '-' + '0' + month + '-' + today.getDate();
+    } else {
+        date = today.getFullYear() + '-' + month + '-' + today.getDate();
+    }
+
+    fetch('/apiMLB', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -247,42 +310,209 @@ function matchAccTeamToLiveTeams(teamsList, abriviationMap) {
             date: date
         })
     }).then(res => res.json()).then(data => {
-        console.log(data);
-        liveScoresContainer.style.display = 'block';
-        for (let i = 0; i < data.length; i++) {
-            // check if what data maps to is in teams list
-            if (teamsList.includes(abriviationMap.get(data[i].HomeTeam)) || teamsList.includes(abriviationMap.get(data[i].AwayTeam))) {
 
-                displayTeams(data[i]);
+        for (let i = 0; i < data.length; i++) {
+            if (teamsList.includes(abriviationMap.get(data[i].HomeTeam)) || teamsList.includes(abriviationMap.get(data[i].AwayTeam))) {
+                displayMLBTeams(data[i], abriviationMap);
             }
         }
+
     })
+
 
 }
 
-function displayTeams(gameInstance) {
-    // <div class='gameDiv'>
-    //     <h3>Lakers 45</h3>
-    //     <h3>Warroior 33</h3>
-    //     <h3>Scheduled</h3>
-    // </div>
+function matchUCLTeamToLiveTeams(teamsList) {
+
+    var today = new Date();
+    var month = today.getMonth() + 1;
+    var date;
+
+    if (month.length == 1) {
+        date = today.getFullYear() + '-' + '0' + month + '-' + today.getDate();
+    } else {
+        date = today.getFullYear() + '-' + month + '-' + today.getDate();
+    }
+
+    fetch('/apiUCL', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/josn'
+        },
+        body: JSON.stringify({
+            date: date
+        })
+    }).then(res => res.json()).then(data => {
+        console.log('check if block is none');
+        //if (liveScoresContainer.style.display === 'none') {
+        console.log('inside match UCL');
+        // liveScoresContainer.style.display = 'block';
+        //}
+        for (let i = 0; i < data.length; i++) {
+            if (teamsList.includes(data[i].HomeTeamName) || teamsList.includes(data[i].AwayTeamName)) {
+
+                displayUCLTeams(data[i]);
+            }
+        }
+
+    })
+}
+
+function displayNBATeams(gameInstance, abriviationMap) {
 
     var gameDiv = document.createElement("div");
     gameDiv.className = "gameDiv";
 
+    var teamsDiv = document.createElement("div");
+    teamsDiv.className = "teamsDiv";
+
+    var scoreDiv = document.createElement("div");
+    scoreDiv.className = "scoreDiv";
+
+
     var homeTeam = document.createElement("h3");
-    homeTeam.innerText = gameInstance.HomeTeam + ' ' + gameInstance.HomeTeamScore;
-    gameDiv.appendChild(homeTeam);
+    homeTeam.innerText = abriviationMap.get(gameInstance.HomeTeam);
+    teamsDiv.appendChild(homeTeam);
 
     var awayTeam = document.createElement("h3");
-    awayTeam.innerText = gameInstance.AwayTeam + ' ' + gameInstance.AwayTeamScore;
-    gameDiv.appendChild(awayTeam);
+    awayTeam.innerText = abriviationMap.get(gameInstance.AwayTeam);
+    teamsDiv.appendChild(awayTeam);
+
+    var homeTeamScore = document.createElement("h3");
+    homeTeamScore.innerText = gameInstance.HomeTeamScore;
+    scoreDiv.appendChild(homeTeamScore);
+
+    var awayTeamScore = document.createElement("h3");
+    awayTeamScore.innerText = gameInstance.AwayTeamScore;
+    scoreDiv.appendChild(awayTeamScore);
+
+    gameDiv.appendChild(teamsDiv);
+    gameDiv.appendChild(scoreDiv);
 
     var status = document.createElement("h3");
-    status.innerText = gameInstance.Status;
+    if (gameInstance.Status === 'InProgress') {
+        if (gameInstance.Quarter === 'Half') {
+            status.innerText = 'Half';
+        } else {
+            status.innerText = 'Q' + gameInstance.Quarter + ' ' + gameInstance.TimeRemainingMinutes + ':' + gameInstance.TimeRemainingSeconds;
+        }
+    } else if (gameInstance.Status === 'Final') {
+        status.innerText = gameInstance.Status;
+    } else {
+        status.innerText = "Today " + gameInstance.DateTime.slice(11, 16);
+
+    }
     gameDiv.appendChild(status);
 
-    gameInstanceContainer.appendChild(gameDiv);
+    NBAgameInstanceContainer.appendChild(gameDiv);
 
-    console.log(gameInstance);
+}
+
+function displayMLBTeams(gameInstance, abriviationMap) {
+
+    var gameDiv = document.createElement("div");
+    gameDiv.className = "gameDiv";
+
+    var teamsDiv = document.createElement("div");
+    teamsDiv.className = "teamsDiv";
+
+    var scoreDiv = document.createElement("div");
+    scoreDiv.className = "scoreDiv";
+
+
+    var homeTeam = document.createElement("h3");
+    homeTeam.innerText = abriviationMap.get(gameInstance.HomeTeam);
+    teamsDiv.appendChild(homeTeam);
+
+    var awayTeam = document.createElement("h3");
+    awayTeam.innerText = abriviationMap.get(gameInstance.AwayTeam);
+    teamsDiv.appendChild(awayTeam);
+
+    var homeTeamRuns = document.createElement("h3");
+    homeTeamRuns.innerText = gameInstance.HomeTeamRuns;
+    scoreDiv.appendChild(homeTeamRuns);
+
+    var awayTeamRuns = document.createElement("h3");
+    awayTeamRuns.innerText = gameInstance.AwayTeamRuns;
+    scoreDiv.appendChild(awayTeamRuns);
+
+    gameDiv.appendChild(teamsDiv);
+    gameDiv.appendChild(scoreDiv);
+
+    var status = document.createElement("h3");
+    if (gameInstance.Status === 'InProgress') {
+        if (gameInstance.Inning === 1) {
+            status.innerText = gameInstance.InningHalf + ' ' + gameInstance.Inning + 'st';
+        } else if (gameInstance.Inning === 2) {
+            status.innerText = gameInstance.InningHalf + ' ' + gameInstance.Inning + 'nd';
+
+        } else if (gameInstance.Inning === 3) {
+            status.innerText = gameInstance.InningHalf + ' ' + gameInstance.Inning + 'rd';
+
+        } else {
+            status.innerText = gameInstance.InningHalf + ' ' + gameInstance.Inning + 'th';
+        }
+    } else if (gameInstance.Status === 'Final') {
+        status.innerText = gameInstance.Status;
+    } else {
+        status.innerText = "Today " + gameInstance.DateTime.slice(11, 16);
+
+    }
+    gameDiv.appendChild(status);
+
+    MLBgameInstanceContainer.appendChild(gameDiv);
+
+}
+
+function displayUCLTeams(gameInstance) {
+
+    var gameDiv = document.createElement("div");
+    gameDiv.className = "gameDiv";
+
+    var teamsDiv = document.createElement("div");
+    teamsDiv.className = "teamsDiv";
+
+    var scoreDiv = document.createElement("div");
+    scoreDiv.className = "scoreDiv";
+
+    var homeTeamName = document.createElement("h3");
+    homeTeamName.innerText = gameInstance.HomeTeamName;
+    teamsDiv.appendChild(homeTeamName);
+
+    var awayTeamName = document.createElement("h3");
+    awayTeamName.innerText = gameInstance.AwayTeamName;
+    teamsDiv.appendChild(awayTeamName);
+
+    var homeTeamScore = document.createElement("h3");
+    homeTeamScore.innerText = gameInstance.HomeTeamScore;
+    scoreDiv.appendChild(homeTeamScore);
+
+    var awayTeamScore = document.createElement("h3");
+    awayTeamScore.innerText = gameInstance.AwayTeamScore;
+    scoreDiv.appendChild(awayTeamScore);
+
+    gameDiv.appendChild(teamsDiv);
+    gameDiv.appendChild(scoreDiv);
+
+    var status = document.createElement("h3");
+    if (gameInstance.Status === 'InProgress') {
+        //check what clcok actually is at the half 
+        if (gameInstance.Clock === 'Half') {
+            status.innerText = 'HT';
+        } else {
+            status.innerText = gameInstance.Clock + '\'';
+        }
+    } else if (gameInstance.Status === 'Final') {
+        status.innerText = gameInstance.Status;
+    } else {
+        status.innerText = "Today " + gameInstance.DateTime.slice(11, 16);
+
+    }
+
+
+    gameDiv.appendChild(status);
+
+    UCLgameInstanceContainer.appendChild(gameDiv);
+
 }

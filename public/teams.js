@@ -1,0 +1,71 @@
+var NBA_TeamsArray = ['Atlanta Hawks', 'Boston Celtics', 'Brooklyn Nets', 'Charlotte Hornets', 'Chicago Bulls', 'Cleveland Cavaliers', 'Dallas Mavericks', 'Denver Nuggets', 'Detroit Pistons', 'Golden State Warriors', 'Houston Rockets', 'Indiana Pacers', 'LA Clippers', 'LA Lakers', 'Memphis Grizzlies', 'Miami Heat', 'Milwaukee Bucks', 'Minnesota Timberwolves', 'New Orleans Pelicans', 'New York Knicks', 'Oklahoma City Thunder', 'Orlando Magic', 'Philadelphia Sixers', 'Phoenix Suns', 'Portland Trail Blazers', 'Sacramento Kings', 'San Antonio Spurs', 'Toronto Raptors', 'Utah Jazz', 'Washington Wizards'];
+var MLB_TeamsArray = ['Arizona Diamondbacks', 'Atlanta Braves', 'Baltimore Orioles', 'Boston Red Sox', 'Chicago White Sox', 'Chicago Cubs', 'Cincinnati Reds', 'Cleveland Indians', 'Colorado Rockies', 'Detroit Tigers', 'Houston Astros', 'Kansas City Royals', 'Los Angeles Angels', 'Los Angeles Dodgers', 'Miami Marlins', 'Milwaukee Brewers', 'Minnesota Twins', 'New York Yankees', 'New York Mets', 'Oakland Athletics', 'Philadelphia Phillies', 'Pittsburgh Pirates', 'San Diego Padres', 'San Francisco Giants', 'Seattle Mariners', 'St. Louis Cardinals', 'Tampa Bay Rays', 'Texas Rangers', 'Toronto Blue Jays', 'Washington Nationals'];
+var UCL_TeamsArray = ['Chelsea FC', 'FC Barcelona', 'FC Bayern München', 'Juventus FC', 'Manchester City FC', 'Olympique Lyonnais', 'Real Madrid CF', 'SSC Napoli'];
+
+var MLB_TeamsMap = new Map([
+    ['ARI', 'Arizona Diamondbacks'],
+    ['ATL', 'Atlanta Braves'],
+    ['BAL', 'Baltimore Orioles'],
+    ['BOS', 'Boston Red Sox'],
+    ['CHW', 'Chicago White Sox'],
+    ['CHC', 'Chicago Cubs'],
+    ['CIN', 'Cincinnati Reds'],
+    ['CLE', 'Cleveland Indians'],
+    ['COL', 'Colorado Rockies'],
+    ['DET', 'Detroit Tigers'],
+    ['HOU', 'Houston Astros'],
+    ['KC', 'Kansas City Royals'],
+    ['LAL', 'Los Angeles Angels'],
+    ['LAD', 'Los Angeles Dodgers'],
+    ['MIA', 'Miami Marlins'],
+    ['MIL', 'Milwaukee Brewers'],
+    ['MIN', 'Minnesota Twins'],
+    ['NYY', 'New York Yankees'],
+    ['NYM', 'New York Mets'],
+    ['OAK', 'Oakland Athletics'],
+    ['PHI', 'Philadelphia Phillies'],
+    ['PIT', 'Pittsburgh Pirates'],
+    ['SD', 'San Diego Padres'],
+    ['SF', 'San Francisco Giants'],
+    ['SEA', 'Seattle Mariners'],
+    ['STL', 'St. Louis Cardinals'],
+    ['TB', 'Tampa Bay Rays'],
+    ['TEX', 'Texas Rangers'],
+    ['TOR', 'Toronto Blue Jays'],
+    ['WSH', 'Washington Nationals']
+]);
+
+var NBA_TeamsMap = new Map([
+    ['ATL', 'Atlanta Hawks'],
+    ['BOS', 'Boston Celtics'],
+    ['BKN', 'Brooklyn Nets'],
+    ['CHA', 'Charlotte Hornets'],
+    ['CHI', 'Chicago Bulls'],
+    ['CLV', 'Cleveland Cavaliers'],
+    ['DAL', 'Dallas Mavericks'],
+    ['DEN', 'Denver Nuggets'],
+    ['DET', 'Detroit Pistons'],
+    ['GSW', 'Golden State Warriors'],
+    ['HOU', 'Houston Rockets'],
+    ['IND', 'Indiana Pacers'],
+    ['LAC', 'LA Clippers'],
+    ['LAL', 'LA Lakers'],
+    ['MEM', 'Memphis Grizzlies'],
+    ['MIA', 'Miami Heat'],
+    ['MIL', 'Milwaukee Bucks'],
+    ['MIN', 'Minnesota Timberwolves'],
+    ['NOP', 'New Orleans Pelicans'],
+    ['NYK', 'New York Knicks'],
+    ['OKC', 'Oklahoma City Thunder'],
+    ['ORL', 'Orlando Magic'],
+    ['PHI', 'Philadelphia Sixers'],
+    ['PHX', 'Phoenix Suns'],
+    ['POR', 'Portland Trail Blazers'],
+    ['SAC', 'Sacramento Kings'],
+    ['SAS', 'San Antonio Spurs'],
+    ['TOR', 'Toronto Raptors'],
+    ['UTA', 'Utah Jazz'],
+    ['WAS', 'Washington Wizards']
+]);
+
+export default { NBA_TeamsArray, MLB_TeamsArray, UCL_TeamsArray, MLB_TeamsMap, NBA_TeamsMap };

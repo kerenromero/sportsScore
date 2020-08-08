@@ -9,7 +9,9 @@ const accountSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    teamsList: [String]
+    NBAteamsList: [String],
+    MLBteamsList: [String],
+    UCLteamsList: [String]
 
 })
 
