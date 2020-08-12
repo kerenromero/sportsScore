@@ -36,6 +36,7 @@ app.get('/', async(req, res) => {
 
 app.post('/addToTeamsList', async(req, res) => {
     try {
+        await account.update({ "_id": req.body.username }, { $set: { "NBAteamsList": [], "MLBteamsList": [], "UCLteamsList": [] } }, { multi: true });
         await account.update({ "_id": req.body.username }, { $push: { NBAteamsList: { $each: req.body.tempNBAteamsList }, MLBteamsList: { $each: req.body.tempMLBteamsList }, UCLteamsList: { $each: req.body.tempUCLteamsList } } });
         const acc = await account.find({ "_id": req.body.username });
         console.log(acc);
